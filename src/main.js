@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 // 导入按需导入的配置文件
 import '@/utils/vant-ui'
+import '@/styles/common.less'
 
 Vue.config.productionTip = false
 

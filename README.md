@@ -49,5 +49,6 @@ axios.interceptors.request.use(
     return config;
   }
 );
-
 ```
+
+4.项目的初始要先确认页面，然后确认路由，不然毫无头绪
