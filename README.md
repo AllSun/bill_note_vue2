@@ -52,3 +52,6 @@ axios.interceptors.request.use(
 ```
 
 4.项目的初始要先确认页面，然后确认路由，不然毫无头绪
+
+5.this.$route 这个是路由对象，可以获取路径
+this.$router 用于编程式导航，嵌套在js中，常用的方法有replace、push、go、back

@@ -48,8 +48,9 @@
 </template>
 
 <script>
+import { codeLogin } from '@/api/login'
 export default {
-  name: 'AuthTabs',
+  name: 'Login',
   data () {
     return {
       activeTab: 'login',
@@ -67,11 +68,18 @@ export default {
   methods: {
     handleLogin () {
       const { username, password } = this.loginForm
+      console.log(username, password)
       if (!username || !password) {
         alert('请完整填写登录信息！')
         return
       }
-      alert(`登录成功！账号：${username}`)
+      const res = codeLogin({ username, password })
+      if (res.code !== 200) {
+        alert('登录失败！')
+        return
+      }
+      this.$toast(res.message + '执行')
+      this.$router.push({ path: '/' })
     },
     handleRegister () {
       const { username, password, code } = this.registerForm
