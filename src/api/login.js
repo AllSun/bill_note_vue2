@@ -1,10 +1,7 @@
-// 此处用于存放所有登录相关的接口请求
-import { post } from '@/utils/index'
+import request from '@/utils/request'
 export const codeLogin = (username, password) => {
-  return post('/api/user/login', {
-    form: {
-      username,
-      password
-    }
+  return request.post('/api/user/login', {
+    username,
+    password
   })
 }

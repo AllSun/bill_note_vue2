@@ -66,20 +66,19 @@ export default {
     }
   },
   methods: {
-    handleLogin () {
+    async handleLogin () {
       const { username, password } = this.loginForm
       console.log(username, password)
-      if (!username || !password) {
-        alert('请完整填写登录信息！')
-        return
-      }
-      const res = codeLogin({ username, password })
+
+      const res = await codeLogin(
+        username,
+        password
+      )
+      console.log(res)
       if (res.code !== 200) {
-        alert('登录失败！')
-        return
+        //
       }
-      this.$toast(res.message + '执行')
-      this.$router.push({ path: '/' })
+      this.$router.push({ path: '/data' })
     },
     handleRegister () {
       const { username, password, code } = this.registerForm

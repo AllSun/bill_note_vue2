@@ -55,3 +55,7 @@ axios.interceptors.request.use(
 
 5.this.$route 这个是路由对象，可以获取路径
 this.$router 用于编程式导航，嵌套在js中，常用的方法有replace、push、go、back
+
+6.开发环境也没必要配置proxy,直接写死axios的baseURL就好了，暂未定位到为什么vue.config.js配置了无法代理的原因
+
+7.了解axios.post参数，url、data、config，data的格式可以自定义
