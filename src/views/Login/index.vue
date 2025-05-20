@@ -78,7 +78,7 @@ export default {
       if (res.code !== 200) {
         //
       }
-      this.$router.push({ path: '/data' })
+      this.$router.push({ path: '/home' })
     },
     handleRegister () {
       const { username, password, code } = this.registerForm
