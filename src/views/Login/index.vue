@@ -38,17 +38,14 @@
         <label>密码：</label>
         <input type="password" v-model="registerForm.password" placeholder="请输入密码" />
       </div>
-      <div class="form-group">
-        <label>验证码：</label>
-        <input type="text" v-model="registerForm.code" placeholder="请输入验证码" />
-      </div>
       <button @click="handleRegister">注册</button>
     </div>
   </div>
 </template>
 
 <script>
-import { codeLogin } from '@/api/login'
+import { codeLogin, codeRegister } from '@/api/user'
+import { Toast } from 'vant'
 export default {
   name: 'Login',
   data () {
@@ -60,33 +57,46 @@ export default {
       },
       registerForm: {
         username: '',
-        password: '',
-        code: ''
+        password: ''
       }
     }
   },
   methods: {
     async handleLogin () {
       const { username, password } = this.loginForm
-      console.log(username, password)
+      if (!username || !password) {
+        Toast('请完整填写登录信息！')
+        return
+      }
 
       const res = await codeLogin(
         username,
         password
       )
+      this.$store.commit('user/setUserInfo', res.data)
+      this.$toast('登录成功')
       console.log(res)
       if (res.code !== 200) {
-        //
+        Toast(res.msg)
+        return
       }
       this.$router.push({ path: '/home' })
     },
-    handleRegister () {
-      const { username, password, code } = this.registerForm
-      if (!username || !password || !code) {
-        alert('请完整填写注册信息！')
+    async handleRegister () {
+      const { username, password } = this.registerForm
+      if (!username || !password) {
+        Toast('请完整填写注册信息！')
         return
       }
-      alert(`注册成功！账号：${username}`)
+      const res = await codeRegister(
+        username,
+        password
+      )
+      if (res.code !== 200) {
+        Toast(res.msg)
+        return
+      }
+      this.activeTab = 'login'
     }
   }
 }

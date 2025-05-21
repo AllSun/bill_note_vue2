@@ -5,3 +5,9 @@ export const codeLogin = (username, password) => {
     password
   })
 }
+export const codeRegister = (username, password) => {
+  return request.post('/api/user/register', {
+    username,
+    password
+  })
+}
