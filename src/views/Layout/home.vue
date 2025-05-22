@@ -1,4 +1,5 @@
 <template>
+    <div>
   <div class="home">
     <div class="header">
       <div class="dataWrap">
@@ -19,10 +20,43 @@
       </div>
     </div>
   </div>
+  <div class="contenWrap">
+
+  </div>
+  </div>
 </template>
 
 <script>
-export default {}
+export default {
+  name: 'Home',
+  data () {
+    return {
+      list: [{
+        bills: [
+          {
+            amount: '25.00',
+            date: '1623390740000',
+            id: 911,
+            pay_type: 1,
+            remark: '',
+            type_id: 1,
+            type_name: '餐饮'
+          }
+        ],
+        date: '2021-06-11'
+      }]
+    }
+  },
+  computed: {
+    // Define your computed properties here
+  },
+  methods: {
+    // Define your methods here
+  },
+  mounted () {
+    // Code to run when the component is mounted
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -45,7 +79,7 @@ export default {}
     font-size: 14px;
     z-index: 100;
     padding: 10px;
-    .data-wrap {
+    .dataWrap {
       font-size: 14px;
       > span {
         font-size: 12px;
@@ -59,7 +93,7 @@ export default {}
         margin-left: 10px;
       }
     }
-    .type-wrap {
+    .typeWrap {
       display: flex;
       justify-content: flex-end;
       align-items: flex-end;
@@ -74,10 +108,11 @@ export default {}
         margin-right: 6px;
       }
       .arrow {
-        font-size: 12px;
-        margin-left: 4px;
+          font-size: 12px;
+          margin-left: 4px;
       }
     }
   }
+
 }
 </style>
