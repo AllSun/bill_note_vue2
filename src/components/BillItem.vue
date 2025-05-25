@@ -1,25 +1,28 @@
 <template>
   <div>
-    <div class="item">
-      <div class="headerDate">
-        <div class="date">2025-5-21</div>
-        <div class="money">
-          <span>
-            <img src="//yezgea02.com/1615953405599/zhi%402x.png" alt="支" />
-            <span>¥14.23</span>
-          </span>
-          <span>
-            <img src="//yezgea02.com/1615953405599/shou%402x.png" alt="收" />
-            <span>¥12.3</span>
-          </span>
-        </div>
+    <div v-for="(group, index) in billList" :key="index">
+      <!-- 展示日期 + 统计信息 -->
+      <div style="padding: 10px; font-weight: bold;">
+        {{ group.date }} - 支出：{{ getTotal(group.bills, 1) }} 元，收入：{{ getTotal(group.bills, 2) }} 元
       </div>
+
+      <!-- 展示账单明细 -->
+      <van-cell-group>
+        <van-cell
+          v-for="bill in group.bills"
+          :key="bill.id"
+          :title="bill.type_name"
+          :label="bill.remark || '无备注'"
+          :value="(bill.pay_type === 1 ? '-' : '+') + bill.amount + ' 元'"
+          :class="{ 'expense': bill.pay_type === 1, 'income': bill.pay_type === 2 }"
+          is-link
+        />
+      </van-cell-group>
     </div>
   </div>
 </template>
 
 <script>
-import { typeMap } from '@/utils/index.js'
 export default {
   name: 'BillItem',
   data () {
@@ -27,57 +30,27 @@ export default {
       income: 0,
       expense: 0
     }
+  },
+  props: {
+    billList: { type: Array }
+  },
+  methods: {
+    getTotal (bills, type) {
+      // type: 1 为支出，2 为收入
+      return bills
+        .filter((bill) => bill.pay_type === type)
+        .reduce((sum, bill) => sum + parseFloat(bill.amount), 0)
+        .toFixed(2)
+    }
   }
 }
 </script>
 
 <style scoped lang="less">
-.item {
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.1);
-  margin-bottom: 10px;
-  .headerDate {
-    height: 40px;
-    display: flex;
-    background-color: #f9f9f9;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-    div {
-      color: rgba(0, 0, 0, 0.9);
-    }
-    .date {
-      font-weight: bold;
-      font-size: 16px;
-    }
-    .money {
-      > span {
-        margin-left: 20px;
-        img {
-          width: 20px;
-          margin-right: 4px;
-          vertical-align: -4px
-        }
-      }
-    }
-  }
-  :global {
-    .za-cell {
-      &::after {
-        left: 0;
-      }
-      .za-cell__title {
-        display: flex;
-        align-items: center;
-      }
-    }
-  }
-  .item-icon {
-    font-size: 24px;
-    color: #007fff;
-    vertical-align: -2px;
-    margin-right: 2px;
-  }
+.expense {
+  color: red;
+}
+.income {
+  color: green;
 }
 </style>

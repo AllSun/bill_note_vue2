@@ -1,5 +1,4 @@
 <template>
-    <div>
   <div class="home">
     <div class="header">
       <div class="dataWrap">
@@ -8,43 +7,75 @@
       </div>
       <div class="typeWrap">
         <div class="left">
-          <span class="title"
-            >类型 <Icon class="arrow" type="arrow-bottom"
-          /></span>
+          <span class="title">类型 </span>
         </div>
         <div class="right">
-          <span class="time"
-            >2022-06<Icon class="arrow" type="arrow-bottom"
-          /></span>
+          <span class="time">2022-06</span>
         </div>
       </div>
     </div>
-  </div>
-  <div class="contenWrap">
-
-  </div>
+    <div class="contenWrap">
+      <BillItem :billList="list"/>
+    </div>
   </div>
 </template>
 
 <script>
+import BillItem from '@/components/BillItem.vue'
 export default {
   name: 'Home',
+  components: {
+    BillItem // Define your components here
+  },
   data () {
     return {
-      list: [{
-        bills: [
-          {
-            amount: '25.00',
-            date: '1623390740000',
-            id: 911,
-            pay_type: 1,
-            remark: '',
-            type_id: 1,
-            type_name: '餐饮'
-          }
-        ],
-        date: '2021-06-11'
-      }]
+      list: [
+        {
+          bills: [
+            {
+              amount: '25.00',
+              date: '1623390740000',
+              id: 911,
+              pay_type: 1,
+              remark: '',
+              type_id: 1,
+              type_name: '餐饮'
+            },
+            {
+              amount: '24.00',
+              date: '1623390740000',
+              id: 912,
+              pay_type: 1,
+              remark: '',
+              type_id: 1,
+              type_name: '餐饮'
+            }
+          ],
+          date: '2025-05-11'
+        }, {
+          bills: [
+            {
+              amount: '25.00',
+              date: '1623390740000',
+              id: 911,
+              pay_type: 1,
+              remark: '',
+              type_id: 1,
+              type_name: '餐饮'
+            },
+            {
+              amount: '24.00',
+              date: '1623390740000',
+              id: 912,
+              pay_type: 2,
+              remark: '',
+              type_id: 1,
+              type_name: '餐饮'
+            }
+          ],
+          date: '2025-05-12'
+        }
+      ]
     }
   },
   computed: {
@@ -108,11 +139,17 @@ export default {
         margin-right: 6px;
       }
       .arrow {
-          font-size: 12px;
-          margin-left: 4px;
+        font-size: 12px;
+        margin-left: 4px;
       }
     }
   }
-
+  .content-wrap {
+    height: calc(~"(100% - 50px)");
+    overflow: hidden;
+    overflow-y: scroll;
+    background-color: #f5f5f5;
+    padding: 10px;
+  }
 }
 </style>
