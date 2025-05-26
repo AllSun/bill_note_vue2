@@ -14,14 +14,20 @@
         </div>
       </div>
     </div>
-    <div class="contenWrap">
-      <BillItem :billList="list"/>
-    </div>
+    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+      <div class="contenWrap">
+        <BillItem :billList="list" />
+      </div>
+    </van-pull-refresh>
   </div>
 </template>
 
 <script>
 import BillItem from '@/components/BillItem.vue'
+import dayjs from 'dayjs'
+
+import { getBillList } from '@/api/bill'
+
 export default {
   name: 'Home',
   components: {
@@ -29,63 +35,85 @@ export default {
   },
   data () {
     return {
-      list: [
-        {
-          bills: [
-            {
-              amount: '25.00',
-              date: '1623390740000',
-              id: 911,
-              pay_type: 1,
-              remark: '',
-              type_id: 1,
-              type_name: '餐饮'
-            },
-            {
-              amount: '24.00',
-              date: '1623390740000',
-              id: 912,
-              pay_type: 1,
-              remark: '',
-              type_id: 1,
-              type_name: '餐饮'
-            }
-          ],
-          date: '2025-05-11'
-        }, {
-          bills: [
-            {
-              amount: '25.00',
-              date: '1623390740000',
-              id: 911,
-              pay_type: 1,
-              remark: '',
-              type_id: 1,
-              type_name: '餐饮'
-            },
-            {
-              amount: '24.00',
-              date: '1623390740000',
-              id: 912,
-              pay_type: 2,
-              remark: '',
-              type_id: 1,
-              type_name: '餐饮'
-            }
-          ],
-          date: '2025-05-12'
-        }
-      ]
+      currentTime: dayjs().format('YYYY-MM'),
+      page: 1,
+      totalPage: 0,
+      isLoading: false,
+      list: []
+      // list: [
+      //   {
+      //     bills: [
+      //       {
+      //         amount: '25.00',
+      //         date: '1623390740000',
+      //         id: 911,
+      //         pay_type: 1,
+      //         remark: '',
+      //         type_id: 1,
+      //         type_name: '餐饮'
+      //       },
+      //       {
+      //         amount: '24.00',
+      //         date: '1623390740000',
+      //         id: 912,
+      //         pay_type: 1,
+      //         remark: '',
+      //         type_id: 1,
+      //         type_name: '餐饮'
+      //       }
+      //     ],
+      //     date: '2025-05-11'
+      //   },
+      //   {
+      //     bills: [
+      //       {
+      //         amount: '25.00',
+      //         date: '1623390740000',
+      //         id: 911,
+      //         pay_type: 1,
+      //         remark: '',
+      //         type_id: 1,
+      //         type_name: '餐饮'
+      //       },
+      //       {
+      //         amount: '24.00',
+      //         date: '1623390740000',
+      //         id: 912,
+      //         pay_type: 2,
+      //         remark: '',
+      //         type_id: 1,
+      //         type_name: '餐饮'
+      //       }
+      //     ],
+      //     date: '2025-05-12'
+      //   }
+      // ]
     }
   },
   computed: {
     // Define your computed properties here
   },
   methods: {
-    // Define your methods here
+    async onRefresh () {
+      try {
+        // 1. 模拟/发起异步请求
+        const response = await this.fetchBillList()
+        const data = response.data || []
+        this.list = data.list
+      } catch (error) {
+        console.error('刷新失败', error)
+      } finally {
+        // 3. 无论成功或失败，都关闭加载状态
+        this.isLoading = false
+      }
+    },
+    fetchBillList () {
+      return getBillList()
+    }
   },
   mounted () {
     // Code to run when the component is mounted
+    this.onRefresh()
   }
 }
 </script>
