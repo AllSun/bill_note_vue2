@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { Toast } from 'vant'
 const instance = axios.create({
   baseURL: 'http://127.0.0.1:7009',
   withCredentials: true,
@@ -15,7 +15,13 @@ const instance = axios.create({
 // axios.interceptors.request.use  =>改为  instance.interceptors.request.use
 instance.interceptors.request.use(function (config) {
   // 在发送请求之前做些什么
-
+  // 在发送请求之前做些什么
+  Toast.loading({
+    message: '请求中...',
+    forbidClick: true,
+    loadingType: 'spinner',
+    duration: 0
+  })
   return config
 }, function (error) {
   // 对请求错误做些什么
