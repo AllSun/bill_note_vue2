@@ -7,10 +7,10 @@
       </div>
       <div class="typeWrap">
         <div class="left">
-          <span class="title" @click="showPopupType">类型 </span>
+          <span class="title" @click="showPopupType">类型</span>
         </div>
         <div class="right">
-          <span class="time">2022-06</span>
+          <span class="time" @click="showPopupTime" >{{ currentTime }}</span>
         </div>
       </div>
     </div>
@@ -27,12 +27,14 @@
       </van-list>
     </van-pull-refresh>
     </div>
+    <PopupTime v-model="showTime" @confirm="handleConfirm"></PopupTime>
     <PopupType v-model="showType"></PopupType>
   </div>
 </template>
 
 <script>
 import BillItem from '@/components/BillItem.vue'
+import PopupTime from '@/components/PopupTime.vue'
 import PopupType from '@/components/PopupType.vue'
 import dayjs from 'dayjs'
 
@@ -42,12 +44,12 @@ export default {
   name: 'Home',
   components: {
     BillItem,
-    PopupType // Define your components here
+    PopupTime,
+    PopupType// Define your components here
   },
   data () {
     return {
       currentTime: dayjs().format('YYYY-MM'),
-      date: '2023-08',
       type_id: 'all',
       page: 1,
       totalPage: 0,
@@ -71,7 +73,8 @@ export default {
         this.page = 1
         this.isLoading = true
         this.finished = false
-        const response = await getBillList(this.date, this.type_id, this.page)
+        this.loading = false
+        const response = await getBillList(this.currentTime, this.type_id, this.page)
         const data = response.data || []
         this.totalPage = data.totalPage || 0
         this.totalExpense = data.totalExpense || 0
@@ -94,11 +97,10 @@ export default {
       }
       try {
         // 1. 模拟/发起异步请求
-        this.loading = false
+        this.loading = true
         this.page += 1
-        const response = await getBillList(this.date, this.type_id, this.page)
+        const response = await getBillList(this.currentTime, this.type_id, this.page)
         const data = response.data || []
-        console.log('上滑数据加载', data)
         if (data.list.length > 0) {
           this.list.push(...data.list)
         } else {
@@ -110,6 +112,18 @@ export default {
         // 3. 无论成功或失败，都关闭加载状态
         this.loading = false
       }
+    },
+    showPopupTime () {
+      this.showTime = !this.showTime
+    },
+    handleConfirm (date) {
+      this.currentTime = this.formatDate(date)
+      this.onRefresh()
+    },
+    formatDate (date) {
+      const y = date.getFullYear()
+      const m = String(date.getMonth() + 1).padStart(2, '0')
+      return `${y}-${m}`
     },
     showPopupType () {
       this.showType = !this.showType

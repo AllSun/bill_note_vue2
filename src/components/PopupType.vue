@@ -1,27 +1,22 @@
 <template>
   <van-popup
-    v-model="internalShow"
+    v-model="internalTypeShow"
     position="bottom"
     closeable
-    :close-on-click-overlay="true"
+    :style="{ height: '60%' }"
   >
-    <div style="padding: 20px">
-      <van-datetime-picker
-        v-model="currentDate"
-        type="year-month"
-        title="选择年月"
-        :min-date="minDate"
-        :max-date="maxDate"
-        :formatter="formatter"
-      />
-      <van-button type="primary" @click="close">关闭</van-button>
-    </div>
+
   </van-popup>
 </template>
 
 <script>
 export default {
   name: 'PopupType',
+  data () {
+    return {
+
+    }
+  },
   props: {
     value: {
       type: Boolean,
@@ -29,7 +24,7 @@ export default {
     }
   },
   computed: {
-    internalShow: {
+    internalTypeShow: {
       get () {
         return this.value
       },
@@ -39,9 +34,10 @@ export default {
     }
   },
   methods: {
-    close () {
-      this.internalShow = false
-    }
+
   }
 }
 </script>
+<style scoped lang="less">
+
+</style>
