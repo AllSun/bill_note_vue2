@@ -2,28 +2,38 @@
   <div class="home">
     <div class="header">
       <div class="dataWrap">
-        <span class="expense">总支出：<b>¥ 200</b></span>
-        <span class="income">总收入：<b>¥ 500</b></span>
+        <span class="expense">总支出：<b>¥{{ totalExpense }}</b></span>
+        <span class="income">总收入：<b>¥{{ totalIncome }}</b></span>
       </div>
       <div class="typeWrap">
         <div class="left">
-          <span class="title">类型 </span>
+          <span class="title" @click="showPopupType">类型 </span>
         </div>
         <div class="right">
           <span class="time">2022-06</span>
         </div>
       </div>
     </div>
+    <div class="content-wrap">
     <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <div class="contenWrap">
-        <BillItem :billList="list" />
-      </div>
+      <van-list
+        v-model="loading"
+        :finished="finished"
+        :immediate-check="false"
+        finished-text="没有更多了"
+        @load="onLoad"
+      >
+          <BillItem :billList="list" />
+      </van-list>
     </van-pull-refresh>
+    </div>
+    <PopupType v-model="showType"></PopupType>
   </div>
 </template>
 
 <script>
 import BillItem from '@/components/BillItem.vue'
+import PopupType from '@/components/PopupType.vue'
 import dayjs from 'dayjs'
 
 import { getBillList } from '@/api/bill'
@@ -31,63 +41,24 @@ import { getBillList } from '@/api/bill'
 export default {
   name: 'Home',
   components: {
-    BillItem // Define your components here
+    BillItem,
+    PopupType // Define your components here
   },
   data () {
     return {
       currentTime: dayjs().format('YYYY-MM'),
+      date: '2023-08',
+      type_id: 'all',
       page: 1,
       totalPage: 0,
+      totalExpense: 0,
+      totalIncome: 0,
+      showType: false,
+      showTime: false,
       isLoading: false,
+      loading: false,
+      finished: false,
       list: []
-      // list: [
-      //   {
-      //     bills: [
-      //       {
-      //         amount: '25.00',
-      //         date: '1623390740000',
-      //         id: 911,
-      //         pay_type: 1,
-      //         remark: '',
-      //         type_id: 1,
-      //         type_name: '餐饮'
-      //       },
-      //       {
-      //         amount: '24.00',
-      //         date: '1623390740000',
-      //         id: 912,
-      //         pay_type: 1,
-      //         remark: '',
-      //         type_id: 1,
-      //         type_name: '餐饮'
-      //       }
-      //     ],
-      //     date: '2025-05-11'
-      //   },
-      //   {
-      //     bills: [
-      //       {
-      //         amount: '25.00',
-      //         date: '1623390740000',
-      //         id: 911,
-      //         pay_type: 1,
-      //         remark: '',
-      //         type_id: 1,
-      //         type_name: '餐饮'
-      //       },
-      //       {
-      //         amount: '24.00',
-      //         date: '1623390740000',
-      //         id: 912,
-      //         pay_type: 2,
-      //         remark: '',
-      //         type_id: 1,
-      //         type_name: '餐饮'
-      //       }
-      //     ],
-      //     date: '2025-05-12'
-      //   }
-      // ]
     }
   },
   computed: {
@@ -97,8 +68,15 @@ export default {
     async onRefresh () {
       try {
         // 1. 模拟/发起异步请求
-        const response = await this.fetchBillList()
+        this.page = 1
+        this.isLoading = true
+        this.finished = false
+        const response = await getBillList(this.date, this.type_id, this.page)
         const data = response.data || []
+        this.totalPage = data.totalPage || 0
+        this.totalExpense = data.totalExpense || 0
+        this.totalIncome = data.totalIncome || 0
+        console.log('下拉刷新当前页数', this.page, '总页数:', this.totalPage, 'loading:', this.loading, 'finished:', this.finished)
         this.list = data.list
       } catch (error) {
         console.error('刷新失败', error)
@@ -107,8 +85,34 @@ export default {
         this.isLoading = false
       }
     },
-    fetchBillList () {
-      return getBillList()
+    async onLoad () {
+      console.log('上滑触发')
+      console.log('当前页:', this.page, '总页数:', this.totalPage, 'loading:', this.loading, 'finished:', this.finished)
+      if (this.page >= this.totalPage) {
+        this.finished = true
+        return
+      }
+      try {
+        // 1. 模拟/发起异步请求
+        this.loading = false
+        this.page += 1
+        const response = await getBillList(this.date, this.type_id, this.page)
+        const data = response.data || []
+        console.log('上滑数据加载', data)
+        if (data.list.length > 0) {
+          this.list.push(...data.list)
+        } else {
+          this.finished = true
+        }
+      } catch (error) {
+        console.error('加载更多失败', error)
+      } finally {
+        // 3. 无论成功或失败，都关闭加载状态
+        this.loading = false
+      }
+    },
+    showPopupType () {
+      this.showType = !this.showType
     }
   },
   mounted () {
@@ -173,9 +177,9 @@ export default {
     }
   }
   .content-wrap {
-    height: calc(~"(100% - 50px)");
+    height: 100vh;
     overflow: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     background-color: #f5f5f5;
     padding: 10px;
   }

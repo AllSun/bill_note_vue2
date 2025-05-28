@@ -1,4 +1,4 @@
-import { Button, Icon, Tabbar, TabbarItem, Cell, Checkbox, Toast, PullRefresh, List, CellGroup } from 'vant'
+import { DatetimePicker, Button, Icon, Tabbar, TabbarItem, Cell, Checkbox, Toast, PullRefresh, List, CellGroup, Popup } from 'vant'
 import Vue from 'vue'
 Vue.use(Button)
 Vue.use(Icon)
@@ -10,3 +10,5 @@ Vue.use(Toast)
 Vue.use(PullRefresh)
 Vue.use(List)
 Vue.use(CellGroup)
+Vue.use(Popup)
+Vue.use(DatetimePicker)
