@@ -6,7 +6,7 @@
     :style="{ height: '60%' }"
   >
     <div class="header">请选择类型</div>
-    <van-button class="my-button" type="default" @click="handleSelect">全部类型</van-button>
+    <van-button class="my-button" type="default" @click="handleSelect('all')">全部类型</van-button>
     <div class="expense" style="margin-left:20px">支出:</div>
     <div class="expenseType">
       <!-- {{ typeList}} -->
@@ -64,10 +64,10 @@ export default {
     }
   },
   methods: {
-    handleSelect (index = '') {
-      this.selectedIndex = index || 'all'
-      this.$emit('select', index) // 发送事件给父组件
-      this.internalTypeShow = false // 关闭弹窗
+    handleSelect (index) {
+      this.selectedIndex = index
+      this.$emit('select', this.selectedIndex) // 把 'all' 或具体 id 传给父组件
+      this.internalTypeShow = false
     }
   }
 }

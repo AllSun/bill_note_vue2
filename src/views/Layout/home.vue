@@ -2,33 +2,51 @@
   <div class="home">
     <div class="header">
       <div class="dataWrap">
-        <span class="expense">总支出：<b>¥{{ totalExpense }}</b></span>
-        <span class="income">总收入：<b>¥{{ totalIncome }}</b></span>
+        <span class="expense"
+          >总支出：<b>¥{{ totalExpense }}</b></span
+        >
+        <span class="income"
+          >总收入：<b>¥{{ totalIncome }}</b></span
+        >
       </div>
       <div class="typeWrap">
         <div class="left">
-          <span class="title" @click="showPopupType">{{ this.typeList.filter(item => item.id === this.type_id)[0]?.name || '全部类型' }} </span>
+          <span class="title" @click="showPopupType"
+            >{{
+              this.typeList.filter((item) => item.id === this.type_id)[0]
+                ?.name || "全部类型"
+            }}
+            <van-icon name="arrow-down"
+          /></span>
         </div>
         <div class="right">
-          <span class="time" @click="showPopupTime" >{{ currentTime }}</span>
+          <span class="time" @click="showPopupTime"
+            >{{ currentTime }} <van-icon name="arrow-down"
+          /></span>
         </div>
       </div>
     </div>
     <div class="content-wrap">
-    <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
-      <van-list
-        v-model="loading"
-        :finished="finished"
-        :immediate-check="false"
-        finished-text="没有更多了"
-        @load="onLoad"
-      >
+      <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
+        <van-list
+          v-model="loading"
+          :finished="finished"
+          :immediate-check="false"
+          finished-text="没有更多了"
+          @load="onLoad"
+        >
           <BillItem :billList="list" />
-      </van-list>
-    </van-pull-refresh>
+        </van-list>
+      </van-pull-refresh>
     </div>
     <PopupTime v-model="showTime" @confirm="handleConfirm"></PopupTime>
-    <PopupType v-model="showType" :typeList="typeList" @select="handleSelect"></PopupType>
+    <PopupType
+      v-model="showType"
+      :typeList="typeList"
+      @select="handleSelect"
+    ></PopupType>
+    <!-- 添加在这 -->
+    <van-icon name="add" class="add" size="3em" />
   </div>
 </template>
 
@@ -46,7 +64,7 @@ export default {
   components: {
     BillItem,
     PopupTime,
-    PopupType// Define your components here
+    PopupType // Define your components here
   },
   data () {
     return {
@@ -76,15 +94,29 @@ export default {
         this.isLoading = true
         this.finished = false
         this.loading = false
-        const response = await getBillList(this.currentTime, this.type_id, this.page)
+
+        const response = await getBillList(
+          this.currentTime,
+          this.type_id,
+          this.page
+        )
         const data = response.data || []
         this.totalPage = data.totalPage || 0
         this.totalExpense = data.totalExpense || 0
         this.totalIncome = data.totalIncome || 0
-        // console.log('下拉刷新当前页数', this.page, '总页数:', this.totalPage, 'loading:', this.loading, 'finished:', this.finished)
+        console.log(
+          '下拉刷新当前页数',
+          this.page,
+          '总页数:',
+          this.totalPage,
+          'loading:',
+          this.loading,
+          'finished:',
+          this.finished
+        )
         this.list = data.list
         // console.log('判断类型2', this.typeList.filter(item => item.id === this.type_id)[0]?.name || '全部类型')
-        console.log('判断类型2', this.typeList.filter(item => item.id === this.type_id))
+        // console.log('判断类型2', this.typeList.filter(item => item.id === this.type_id))
       } catch (error) {
         console.error('刷新失败', error)
       } finally {
@@ -93,8 +125,16 @@ export default {
       }
     },
     async onLoad () {
-      // console.log('上滑触发')
-      // console.log('当前页:', this.page, '总页数:', this.totalPage, 'loading:', this.loading, 'finished:', this.finished)
+      console.log(
+        '上滑触发当前页:',
+        this.page,
+        '总页数:',
+        this.totalPage,
+        'loading:',
+        this.loading,
+        'finished:',
+        this.finished
+      )
       if (this.page >= this.totalPage) {
         this.finished = true
         return
@@ -103,7 +143,11 @@ export default {
         // 1. 模拟/发起异步请求
         this.loading = true
         this.page += 1
-        const response = await getBillList(this.currentTime, this.type_id, this.page)
+        const response = await getBillList(
+          this.currentTime,
+          this.type_id,
+          this.page
+        )
         const data = response.data || []
         if (data.list.length > 0) {
           this.list.push(...data.list)
@@ -125,9 +169,9 @@ export default {
       this.onRefresh()
     },
     handleSelect (index) {
-      this.type_id = index || 'all'
+      this.type_id = index
       this.onRefresh()
-      console.log('子组件传递的类型id:', this.type_id)
+      // console.log('子组件传递的类型id:', this.type_id)
     },
     formatDate (date) {
       const y = date.getFullYear()
@@ -138,7 +182,7 @@ export default {
       this.showType = !this.showType
       const response = await getTypeList()
       this.typeList = response.data.list || []
-      console.log('类型列表', this.typeList)
+      // console.log('类型列表', this.typeList)
     }
   },
   mounted () {
@@ -209,5 +253,14 @@ export default {
     background-color: #f5f5f5;
     padding: 10px;
   }
+  .add {
+  position: fixed;
+  right: 40px;
+  bottom: 100px;
+  font-size: 32px;
+  color: #1989fa;
+  z-index: 999;
+}
+
 }
 </style>
