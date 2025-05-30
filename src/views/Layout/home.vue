@@ -39,14 +39,15 @@
         </van-list>
       </van-pull-refresh>
     </div>
-    <PopupTime v-model="showTime" @confirm="handleConfirm"></PopupTime>
+    <PopupTime v-model="showTime" @confirm="handleConfirm" timeType="month"></PopupTime>
     <PopupType
       v-model="showType"
       :typeList="typeList"
       @select="handleSelect"
     ></PopupType>
     <!-- 添加在这 -->
-    <van-icon name="add" class="add" size="3em" />
+    <van-icon name="add" class="add" size="3em" @click="showPopupAdd"/>
+    <PopupAdd v-model="showAdd" ></PopupAdd>
   </div>
 </template>
 
@@ -54,6 +55,7 @@
 import BillItem from '@/components/BillItem.vue'
 import PopupTime from '@/components/PopupTime.vue'
 import PopupType from '@/components/PopupType.vue'
+import PopupAdd from '@/components/PopupAdd.vue'
 import dayjs from 'dayjs'
 
 import { getBillList } from '@/api/bill'
@@ -64,7 +66,8 @@ export default {
   components: {
     BillItem,
     PopupTime,
-    PopupType // Define your components here
+    PopupType,
+    PopupAdd // Define your components here
   },
   data () {
     return {
@@ -76,6 +79,7 @@ export default {
       totalIncome: 0,
       showType: false,
       showTime: false,
+      showAdd: false,
       isLoading: false,
       loading: false,
       finished: false,
@@ -163,6 +167,9 @@ export default {
     },
     showPopupTime () {
       this.showTime = !this.showTime
+    },
+    showPopupAdd () {
+      this.showAdd = !this.showAdd
     },
     handleConfirm (date) {
       this.currentTime = this.formatDate(date)
