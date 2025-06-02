@@ -16,6 +16,7 @@
           :value="(bill.pay_type === 1 ? '-' : '+') + bill.amount + ' 元'"
           :class="{ 'expense': bill.pay_type === 1, 'income': bill.pay_type === 2 }"
           is-link
+          @click="$emit('item-click', bill)"
         />
       </van-cell-group>
     </div>

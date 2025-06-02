@@ -30,9 +30,15 @@ const router = new VueRouter({
       ]
     },
     { path: '/about', component: About },
-    { path: '/detail', component: Detail },
+    // { path: '/detail', component: Detail },
     { path: '/userinfo', component: UserInfo },
-    { path: '/account', component: Account }
+    { path: '/account', component: Account },
+    {
+      path: '/detail/:id', // 通过账单 ID 跳转
+      name: 'detail',
+      component: Detail,
+      props: true // 将路由参数作为 props 传递给组件
+    }
   ]
 })
 

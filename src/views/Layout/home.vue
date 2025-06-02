@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="content-wrap">
+    <div class="content-wrap" >
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <van-list
           v-model="loading"
@@ -35,7 +35,7 @@
           finished-text="没有更多了"
           @load="onLoad"
         >
-          <BillItem :billList="list" />
+          <BillItem :billList="list" @item-click="onItemClick"/>
         </van-list>
       </van-pull-refresh>
     </div>
@@ -47,7 +47,7 @@
     ></PopupType>
     <!-- 添加在这 -->
     <van-icon name="add" class="add" size="3em" @click="showPopupAdd"/>
-    <PopupAdd v-model="showAdd" ></PopupAdd>
+    <PopupAdd v-model="showAdd" @onRefresh="onRefresh"></PopupAdd>
   </div>
 </template>
 
@@ -190,6 +190,10 @@ export default {
       const response = await getTypeList()
       this.typeList = response.data.list || []
       // console.log('类型列表', this.typeList)
+    },
+    onItemClick (item) {
+    // 通过路由跳转到详情页，并传入 id
+      this.$router.push({ name: 'detail', params: { id: item.id } })
     }
   },
   mounted () {
