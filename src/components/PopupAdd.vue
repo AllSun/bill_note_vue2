@@ -153,10 +153,16 @@ export default {
       }
     },
     async fetchTypeList () {
-      const response = await getTypeList()
-      this.typeList = response.data.list || []
-      console.log('Type List:', this.typeList)
+      try {
+        const response = await getTypeList()
+        this.typeList = response?.data?.list || []
+        console.log('Type List:', this.typeList)
+      } catch (error) {
+        console.error('Failed to fetch type list:', error)
+        this.typeList = []
+      }
     },
+
     setBill (bill) {
       this.keyvalue = bill.amount
       this.typeId = bill.type_id

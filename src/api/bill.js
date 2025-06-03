@@ -22,3 +22,7 @@ export const deleteBill = (id) => {
 export const updateBill = (params) => {
   return request.post('/api/bill/update', params)
 }
+
+export const getData = (currentDate) => {
+  return request.get(`/api/bill/data?date=${currentDate}`)
+}

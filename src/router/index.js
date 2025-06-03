@@ -69,8 +69,10 @@ router.beforeEach((to, from, next) => {
   // const token = store.state.user.userInfo.token,  这样写太麻烦，使用getters函数简化
   const token = store.getters.token
   if (token) {
+    console.log('token存在，放行')
     next()
   } else {
+    console.log('token不存在，拦截到登录页')
     next('/login')
   }
 })
