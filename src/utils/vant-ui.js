@@ -1,4 +1,4 @@
-import { Progress, NavBar, Field, NumberKeyboard, DatetimePicker, Button, Icon, Tabbar, TabbarItem, Cell, Checkbox, Toast, PullRefresh, List, CellGroup, Popup } from 'vant'
+import { Uploader, Form, Progress, NavBar, Field, NumberKeyboard, DatetimePicker, Button, Icon, Tabbar, TabbarItem, Cell, Checkbox, Toast, PullRefresh, List, CellGroup, Popup } from 'vant'
 import Vue from 'vue'
 Vue.use(Button)
 Vue.use(Icon)
@@ -16,3 +16,5 @@ Vue.use(NumberKeyboard)
 Vue.use(Field)
 Vue.use(NavBar)
 Vue.use(Progress)
+Vue.use(Form)
+Vue.use(Uploader)

@@ -11,3 +11,6 @@ export const codeRegister = (username, password) => {
     password
   })
 }
+export const getUserInfo = () => {
+  return request.get('/api/user/get_userinfo')
+}
