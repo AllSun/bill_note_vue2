@@ -30,12 +30,15 @@
           />
         </van-cell-group>
       </div>
+      <van-button type="info" @click="save">保存</van-button>
+
     </div>
   </div>
 </template>
 
 <script>
-import { getUserInfo } from '@/api/user'
+import store from '@/store'
+import { getUserInfo, updateUserInfo } from '@/api/user'
 import axios from 'axios'
 export default {
   data () {
@@ -78,12 +81,23 @@ export default {
         data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',
-          Authorization: localStorage.getItem('token')
+          Authorization: store.getters.token || ''
         }
       }).then((res) => {
         // 返回图片地址
         this.avatar = res.data.avatar
       })
+    },
+    async save () {
+      try {
+        const res = await updateUserInfo({
+          avatar: this.avatar,
+          signature: this.signature
+        })
+        console.log('保存用户信息成功:', res)
+      } catch (error) {
+        console.error('保存用户信息失败:', error)
+      }
     }
   },
   mounted () {

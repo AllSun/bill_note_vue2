@@ -14,3 +14,7 @@ export const codeRegister = (username, password) => {
 export const getUserInfo = () => {
   return request.get('/api/user/get_userinfo')
 }
+
+export const updateUserInfo = (data) => {
+  return request.post('/api/user/edit_userinfo', data)
+}
