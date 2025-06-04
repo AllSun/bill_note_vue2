@@ -1,7 +1,7 @@
 import axios from 'axios'
 import store from '@/store'
 const instance = axios.create({
-  baseURL: 'http://127.0.0.1:7009',
+  baseURL: 'http://192.168.1.4:7009',
   withCredentials: true,
   timeout: 5000, // 请求超时时间
   headers: {

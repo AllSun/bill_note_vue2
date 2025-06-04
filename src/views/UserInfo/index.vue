@@ -30,9 +30,8 @@
           />
         </van-cell-group>
       </div>
-      <van-button type="info" @click="save">保存</van-button>
-
     </div>
+    <van-button type="info" @click="save">保存</van-button>
   </div>
 </template>
 
@@ -84,10 +83,11 @@ export default {
         }
       }).then((res) => {
         // 返回图片地址
-        if (res.data.avatar && res.data.avatar.startsWith('http')) {
-          this.avatar = res.data.avatar
+        console.log('打印res对象', res)
+        if (res.data.data && res.data.data.startsWith('http')) {
+          this.avatar = res.data.data
         } else {
-          const url = 'http://localhost:7009' + res.data.avatar
+          const url = 'http://localhost:7009' + res.data.data
           this.avatar = url
         }
       })
@@ -95,12 +95,9 @@ export default {
     async save () {
       try {
         console.log('准备保存用户信息:', this.signature, this.avatar)
-        const res = await updateUserInfo(
-          this.signature,
-          this.avatar
-        )
+        const res = await updateUserInfo(this.signature, this.avatar)
         if (res.code === 200) {
-          this.$toast('保存用户信息成功:')
+          this.$toast('保存用户信息成功')
         }
       } catch (error) {
         console.error('保存用户信息失败:', error)
@@ -113,5 +110,77 @@ export default {
 }
 </script>
 
-<style>
+<style scoped lang="less">
+.userinfo {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  padding: 16px;
+
+  .content {
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-top: 12px;
+
+    p {
+      font-weight: bold;
+      margin-bottom: 12px;
+      font-size: 16px;
+      color: #333;
+    }
+
+    .avatar {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: 20px;
+
+      p {
+        margin: 0 0 8px 0;
+        font-size: 14px;
+      }
+
+      img {
+        margin-bottom: 8px;
+        border: 1px solid #eee;
+      }
+
+      .desc {
+        font-size: 12px;
+        color: #999;
+        margin-bottom: 8px;
+      }
+
+      span {
+        font-size: 14px;
+        margin-bottom: 8px;
+        color: #666;
+      }
+
+      ::v-deep(.van-uploader) {
+        margin-top: 4px;
+      }
+    }
+
+    .signature {
+      margin-top: 10px;
+
+      ::v-deep(.van-cell-group) {
+        background-color: transparent;
+      }
+
+      ::v-deep(.van-field__control) {
+        font-size: 14px;
+        color: #333;
+      }
+    }
+  }
+
+  .van-button {
+    margin: 20px auto;
+    width: 90%;
+    border-radius: 24px;
+  }
+}
 </style>
