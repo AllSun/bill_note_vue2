@@ -65,8 +65,7 @@ export default {
     },
     afterRead (file) {
       // 处理文件上传逻辑
-      console.log('上传的文件:', file)
-      console.log('file.file', file.file)
+      console.log('上传的文件', file.file)
       if (file && file.file.size > 200 * 1024) {
         this.$toast('上传头像不得超过 200 KB！！')
         return
@@ -77,7 +76,7 @@ export default {
       // 通过 axios 设置  'Content-Type': 'multipart/form-data', 进行文件上传
       axios({
         method: 'post',
-        url: 'http://127.0.0.1:7009/public/upload',
+        url: 'http://127.0.0.1:7009/api/upload',
         data: formData,
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -85,16 +84,24 @@ export default {
         }
       }).then((res) => {
         // 返回图片地址
-        this.avatar = res.data.avatar
+        if (res.data.avatar && res.data.avatar.startsWith('http')) {
+          this.avatar = res.data.avatar
+        } else {
+          const url = 'http://localhost:7009' + res.data.avatar
+          this.avatar = url
+        }
       })
     },
     async save () {
       try {
-        const res = await updateUserInfo({
-          avatar: this.avatar,
-          signature: this.signature
-        })
-        console.log('保存用户信息成功:', res)
+        console.log('准备保存用户信息:', this.signature, this.avatar)
+        const res = await updateUserInfo(
+          this.signature,
+          this.avatar
+        )
+        if (res.code === 200) {
+          this.$toast('保存用户信息成功:')
+        }
       } catch (error) {
         console.error('保存用户信息失败:', error)
       }

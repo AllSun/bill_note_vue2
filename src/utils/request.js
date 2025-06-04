@@ -23,6 +23,7 @@ instance.interceptors.request.use(function (config) {
   //   loadingType: 'spinner',
   //   duration: 0
   // })
+  console.log('请求拦截器的token', store.getters.token)
   return config
 }, function (error) {
   // 对请求错误做些什么
